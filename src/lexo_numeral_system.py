@@ -7,7 +7,7 @@ Created on:     08/12/21, 8:22 pm
 
 class LexoNumeralSystem:
     """ Numeral system of 36 characters """
-    DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz".split()
+    DIGITS = list("0123456789abcdefghijklmnopqrstuvwxyz")
 
     def to_char(self, digit: int) -> str:
         """ Convert the digit to character """

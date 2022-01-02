@@ -107,7 +107,7 @@ class LexoInteger:
         """ Right shift by other times """
         if len(self.mag) - other <= 0:
             return LexoInteger.zero(self.system)
-        new_mag = self.mag[other:-1]        # Shift the mag list to right by other
+        new_mag = self.mag[other:]        # Shift the mag list to right by other
         return LexoInteger.make(self.system, self.sign, new_mag)
 
     def __eq__(self, other: "LexoInteger") -> bool:
@@ -116,14 +116,14 @@ class LexoInteger:
             return True
         if not other:
             return False
-        return self.system.get_base == other.system.get_base and self.compare_to(other)
+        return self.system.get_base == other.system.get_base and self.compare_to(other) == 0
 
     def __str__(self) -> str:
         if self.is_zero():
             return self.system.to_char(0)
         string = ""
         for x in self.mag:
-            string += self.system.to_char(x)
+            string = self.system.to_char(x) + string
         if self.sign == -1:
             string = self.system.negative_char + string
         return string
@@ -184,19 +184,21 @@ class LexoInteger:
             string = string.lstrip(system.negative_char)
             sign = -1
         mag = [system.to_digit(x) for x in string]
+        mag.reverse()
         return LexoInteger.make(system, sign, mag)
 
     @staticmethod
     def make(system: LexoNumeralSystem, sign: int, mag: List[int]) -> "LexoInteger":
         """ Make a LexoInteger """
         # Remove all trailing zeros from mag
-        while mag:
-            if mag[-1]:
+        new_mag = mag[:]
+        while new_mag:
+            if new_mag[-1]:
                 break
-            mag.pop()
-        if not mag:         # mag is empty
+            new_mag.pop()
+        if not new_mag:         # new_mag is empty
             return LexoInteger.zero(system)
-        return LexoInteger(system, sign, mag)
+        return LexoInteger(system, sign, new_mag)
 
     @staticmethod
     def zero(system: LexoNumeralSystem) -> "LexoInteger":
@@ -216,6 +218,7 @@ class LexoInteger:
             lnum = l[i] if i < len(l) else 0
             rnum = r[i] if i < len(r) else 0
             sum = lnum + rnum + carry
+            carry = 0
             while sum >= system.get_base:
                 carry += 1
                 sum -= system.get_base
@@ -234,11 +237,9 @@ class LexoInteger:
         """ Complement a LexoInteger """
         if digits <= 0:
             raise ValueError("Digits should be more than 0")
-        new_mag = []
-        while mag:
-            new_mag.append(system.get_base - 1 - mag.pop(0))
-        # Append zeros to the end if the size is less than system.get_base
-        new_mag += [0] * (system.get_base - 1 - len(new_mag))
+        new_mag = [system.get_base - 1] * digits
+        for i in range(len(mag)):
+            new_mag[i] = system.get_base - 1 - mag[i]
         return new_mag
 
     @staticmethod
@@ -256,7 +257,7 @@ class LexoInteger:
         for i in range(len(l)):
             for j in range(len(r)):
                 index = i + j
-                result[index] = l[i] + r[i]
+                result[index] = l[i] + r[j]
                 while result[index] >= system.get_base:
                     result[index + 1] += 1
                     result[index] -= system.get_base
@@ -277,3 +278,10 @@ class LexoInteger:
             if l[i] > r[i]:
                 return 1
         return 0
+
+
+if __name__ == "__main__":
+    int1 = LexoInteger.parse("1", LexoNumeralSystem())
+    print(int1)
+    int2 = LexoInteger.parse("100000", LexoNumeralSystem())
+    print(int2)

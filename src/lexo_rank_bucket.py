@@ -68,7 +68,9 @@ class LexoRankBucket:
     def get_values() -> List["LexoRankBucket"]:
         if not LexoRankBucket._VALUES:
             LexoRankBucket._VALUES = [
-                LexoRankBucket._BUCKET_0, LexoRankBucket._BUCKET_1, LexoRankBucket._BUCKET_2
+                LexoRankBucket.get_bucket_0(),
+                LexoRankBucket.get_bucket_1(),
+                LexoRankBucket.get_bucket_2()
             ]
         return LexoRankBucket._VALUES
 
@@ -79,14 +81,14 @@ class LexoRankBucket:
     @staticmethod
     def make_from(string: str) -> "LexoRankBucket":
         value = LexoInteger.parse(string, LexoNumeralSystem())
-        for bucket in LexoRankBucket._VALUES:
+        for bucket in LexoRankBucket.get_values():
             if bucket.value == value:
                 return bucket
         raise ValueError(f"Unknown bucket: {string}")
 
     @staticmethod
     def resolve(bucket_id: int) -> "LexoRankBucket":
-        for bucket in LexoRankBucket._VALUES:
+        for bucket in LexoRankBucket.get_values():
             if bucket == LexoRankBucket.make_from(str(bucket_id)):
                 return bucket
         raise ValueError(f"No bucket found with id: {bucket_id}")

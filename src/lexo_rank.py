@@ -174,7 +174,7 @@ class LexoRank:
         left = old_left
         right = old_right
         if old_left.get_scale() < old_right.get_scale():
-            new_left = old_right.set_scale(old_left.get_scale(),ceiling=False)
+            new_left = old_right.set_scale(old_left.get_scale(), ceiling=False)
             if old_left.compare_to(new_left) >= 0:
                 return LexoRank._mid(old_left, old_right)
             right = new_left
@@ -255,7 +255,7 @@ class LexoRank:
     @staticmethod
     def _format_decimal(decimal: LexoDecimal) -> str:
         format_value = str(decimal)
-        new_value = ""
+        new_value = format_value
         partial_index = format_value.find(LexoRank.NUMERAL_SYSTEM.radix_point_char)
         zero = LexoRank.NUMERAL_SYSTEM.to_char(0)
         if partial_index < 0:

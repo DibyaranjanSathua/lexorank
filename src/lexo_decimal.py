@@ -145,3 +145,10 @@ class LexoDecimal:
             return LexoDecimal.make(LexoInteger.parse(string, system), 0)
         int_str = string[0:partial_index] + string[partial_index+1:]
         return LexoDecimal.make(LexoInteger.parse(int_str, system), len(string) - 1 - partial_index)
+
+
+if __name__ == "__main__":
+    d1 = LexoDecimal.parse("1", LexoNumeralSystem())
+    print(d1)
+    d2 = LexoDecimal.parse("1000000", LexoNumeralSystem())
+    print(d2)
