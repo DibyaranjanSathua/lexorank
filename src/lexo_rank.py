@@ -6,12 +6,14 @@ Created on:     27/12/21, 9:39 pm
 Code transpiled from: https://github.com/kvandake/lexorank-ts
 """
 from typing import Optional
+from functools import total_ordering
 
 from src.lexo_numeral_system import LexoNumeralSystem
 from src.lexo_decimal import LexoDecimal
 from src.lexo_rank_bucket import LexoRankBucket
 
 
+@total_ordering
 class LexoRank:
     """ Lexo rank main class """
     NUMERAL_SYSTEM: LexoNumeralSystem = LexoNumeralSystem()
@@ -29,15 +31,23 @@ class LexoRank:
         self.bucket = bucket
         self.decimal = decimal
 
-    def __eq__(self, other: "LexoRank"):
-        if id(self) == id(other):
-            return True
-        if not other:
-            return False
-        return self.value == other.value
+    def __eq__(self, other: "LexoRank") -> bool:
+        return self.compare_to(other) == 0
+
+    # As we are using total_ordering so defining only __eq__ and __lt__ methods should suffice
+    # But just for completion we have defined __gt__
+    # https://www.geeksforgeeks.org/sorting-objects-of-user-defined-class-in-python/
+    def __lt__(self, other: "LexoRank") -> bool:
+        return self.compare_to(other) == -1
+
+    def __gt__(self, other: "LexoRank") -> bool:
+        return self.compare_to(other) == 1
 
     def __str__(self):
         return self.value
+
+    def __repr__(self):
+        return str(self)
 
     def between(self, other: "LexoRank") -> "LexoRank":
         if not self.bucket == other.bucket:
@@ -203,7 +213,7 @@ class LexoRank:
         while mid_scale > 0:
             new_scale = mid_scale - 1
             new_mid = mid.set_scale(new_scale, ceiling=False)
-            if old_left.compare_to(new_mid) >= 0  or new_mid.compare_to(old_right) >= 0:
+            if old_left.compare_to(new_mid) >= 0 or new_mid.compare_to(old_right) >= 0:
                 break
             mid = new_mid
             mid_scale = new_scale

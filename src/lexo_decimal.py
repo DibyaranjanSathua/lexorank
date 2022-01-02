@@ -69,6 +69,9 @@ class LexoDecimal:
             int_str = head + int_str
         return int_str
 
+    def __repr__(self):
+        return str(self)
+
     def floor(self) -> "LexoInteger":
         return self.mag >> self.sig
 

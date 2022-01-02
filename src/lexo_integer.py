@@ -128,6 +128,9 @@ class LexoInteger:
             string = self.system.negative_char + string
         return string
 
+    def __repr__(self):
+        return str(self)
+
     def complement_digits(self, digits: int) -> "LexoInteger":
         return LexoInteger.make(
             self.system,
@@ -257,7 +260,7 @@ class LexoInteger:
         for i in range(len(l)):
             for j in range(len(r)):
                 index = i + j
-                result[index] = l[i] + r[j]
+                result[index] += l[i] * r[j]
                 while result[index] >= system.get_base:
                     result[index + 1] += 1
                     result[index] -= system.get_base
@@ -272,7 +275,7 @@ class LexoInteger:
             return 1
         if l == r:
             return 0
-        for i in range(len(l) - 1, 0):
+        for i in range(len(l) - 1, -1, -1):
             if l[i] < r[i]:
                 return -1
             if l[i] > r[i]:
