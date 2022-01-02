@@ -2,6 +2,8 @@
 File:           main.py
 Author:         Dibyaranjan Sathua
 Created on:     31/12/21, 8:38 pm
+
+Reference: https://github.com/kvandake/lexorank-ts
 """
 from src.lexo_rank import LexoRank
 
